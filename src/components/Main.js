@@ -35,7 +35,11 @@ class ImgFigure extends React.Component {
     e.stopPropagation();
     e.preventDefault();
 
-    this.props.inverse();
+    if (this.props.arrange && this.props.arrange.isCenter) {
+      this.props.inverse();
+    } else {
+      this.props.center();
+    }
   }
 
   render() {
@@ -48,6 +52,11 @@ class ImgFigure extends React.Component {
     // 如果图片的旋转角度有值并且不为0，添加旋转角度
     if (this.props.arrange && this.props.arrange.rotate) {
       styleObj.transform = `rotate(${this.props.arrange.rotate}deg)`;
+    }
+
+    // 如果是居中的图片， z-index设为11
+    if (this.props.arrange && this.props.arrange.isCenter) {
+      styleObj.zIndex = 11;
     }
 
     let imgFigureClassName = 'img-figure';
@@ -77,8 +86,9 @@ class AppComponent extends React.Component {
         //     left: '0',
         //     top: '0'
         //   },
-        //   rotate: 0,   // 旋转角度
-        //   isInverse: false
+        //   rotate: 0,          // 旋转角度
+        //   isInverse: false,   // 图片正反面
+        //   isCenter: false     // 是否居中
         // }
       ]
     };
@@ -131,16 +141,15 @@ class AppComponent extends React.Component {
     let vPosRangeX = vPosRange.x;
 
     let imgsArrangeTopArr = [];
-    // 取一个或者不取
+    // 取1或2个顶部图片
     let topImgNum = Math.ceil(Math.random() * 2);
     let topImgSpliceIndex = 0;
+
+    // 取出居中图片，并对其设置
     let imgsArrangeCenterArr = imgsArrangeArr.splice(centerIndex, 1);
-
-    // 首先居中 centerIndex 的图片
     imgsArrangeCenterArr[0].pos = centerPos;
-
-    // 居中的 centerIndex 的图片不需要旋转
-    imgsArrangeArr[0].rotate = 0;
+    imgsArrangeCenterArr[0].rotate = 0;
+    imgsArrangeCenterArr[0].isCenter = true;
 
     // 取出要布局上侧的图片的状态信息
     topImgSpliceIndex = Math.ceil(Math.random() * (imgsArrangeArr.length - topImgNum));
@@ -153,6 +162,7 @@ class AppComponent extends React.Component {
         left: getRangeRandom(vPosRangeX[0], vPosRangeX[1])
       }
       imgsArrangeTopArr[index].rotate = get30DegRandom();
+      imgsArrangeTopArr[index].isCenter = false;
     });
 
     // 布局左右两侧的图片
@@ -171,15 +181,28 @@ class AppComponent extends React.Component {
         left: getRangeRandom(hPosRangeLORX[0], hPosRangeLORX[1])
       };
       imgsArrangeArr[i].rotate = get30DegRandom();
+      imgsArrangeArr[i].isCenter = false;
     }
 
+    // 由于可能取了1个或者2个顶部图片，所以在此做两次判断，将其合并入imgsArrangeArr
     if (imgsArrangeTopArr && imgsArrangeTopArr[0]) {
       imgsArrangeArr.splice(topImgSpliceIndex, 0, imgsArrangeTopArr[0]);
     }
-
+    if (imgsArrangeTopArr && imgsArrangeTopArr[1]) {
+      imgsArrangeArr.splice(topImgSpliceIndex, 0, imgsArrangeTopArr[1]);
+    }
+    // 将居中图片合并入imgsArrangeArr
     imgsArrangeArr.splice(centerIndex, 0, imgsArrangeCenterArr[0]);
 
     this.setState({ imgsArrangeArr });
+  }
+
+  /**
+   * 利用 rearrange 函数，居中对应index的图片
+   * @param index，需要被居中的图片对应的图片信息数组的index值
+   */
+  center(index) {
+    this.rearrange(index);
   }
 
   componentWillMount() {
@@ -192,7 +215,8 @@ class AppComponent extends React.Component {
             top: '0'
           },
           rotate: 0,
-          isInverse: false
+          isInverse: false,
+          isCenter: false
         };
         this.setState({ imgsArrangeArr });
       }
@@ -206,15 +230,15 @@ class AppComponent extends React.Component {
     let stageDOM = ReactDOM.findDOMNode(this.refs.stage);
     let stageW = stageDOM.scrollWidth;
     let stageH = stageDOM.scrollHeight;
-    let halfStageW = Math.round(stageW / 2);
-    let halfStageH = Math.round(stageH / 2);
+    let halfStageW = Math.ceil(stageW / 2);
+    let halfStageH = Math.ceil(stageH / 2);
 
     // 拿到一个imageFigure的大小
     let imgFigureDOM = ReactDOM.findDOMNode(this.refs.imgFigure0);
     let imgW = imgFigureDOM.scrollWidth;
     let imgH = imgFigureDOM.scrollHeight;
-    let halfImgW = Math.round(imgW / 2);
-    let halfImgH = Math.round(imgH / 2);
+    let halfImgW = Math.ceil(imgW / 2);
+    let halfImgH = Math.ceil(imgH / 2);
 
     // 计算中心图片的位置点
     this.Constant.centerPos = {
@@ -245,15 +269,11 @@ class AppComponent extends React.Component {
     let imgFigures = [];
 
     imageDatas.map((item, index) => {
-      imgFigures.push(<ImgFigure ref={'imgFigure' + index} data={item} key={index} arrange={this.state.imgsArrangeArr[index]} inverse={this.inverse.bind(this, index)} />);
+      imgFigures.push(<ImgFigure ref={'imgFigure' + index} data={item} key={index} arrange={this.state.imgsArrangeArr[index]} inverse={this.inverse.bind(this, index)} center={this.center.bind(this, index)} />);
     });
 
     return (
       <div>
-        {/*<div className="index">
-        <img src={yeomanImage} alt="Yeoman Generator" />
-        <div className="notice">Please edit <code>src/components/Main.js</code> to get started!</div>
-      </div>*/}
         <section className="stage" ref="stage">
           <section className="img-sec">
             {imgFigures}
