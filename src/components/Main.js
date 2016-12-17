@@ -151,14 +151,6 @@ class AppComponent extends React.Component {
     this.setState({ imgsArrangeArr });
   }
 
-  /**
-   * 利用 rearrange 函数，居中对应index的图片
-   * @param index，需要被居中的图片对应的图片信息数组的index值
-   */
-  // center(index) {
-  //   this.rearrange(index);
-  // }
-
   componentWillMount() {
     imageDatas.map((item, index) => {
       if (!this.state.imgsArrangeArr[index]) {
