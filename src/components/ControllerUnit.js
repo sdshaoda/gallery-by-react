@@ -9,7 +9,7 @@ class ControllerUnit extends React.Component {
     if (this.props.arrange.isCenter) {
       this.props.inverse();
     } else {
-      this.props.center();
+      this.props.rearrange();
     }
   }
 

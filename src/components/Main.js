@@ -155,9 +155,9 @@ class AppComponent extends React.Component {
    * 利用 rearrange 函数，居中对应index的图片
    * @param index，需要被居中的图片对应的图片信息数组的index值
    */
-  center(index) {
-    this.rearrange(index);
-  }
+  // center(index) {
+  //   this.rearrange(index);
+  // }
 
   componentWillMount() {
     imageDatas.map((item, index) => {
@@ -230,7 +230,7 @@ class AppComponent extends React.Component {
           key={index}
           arrange={this.state.imgsArrangeArr[index]}
           inverse={this.inverse.bind(this, index)}
-          center={this.center.bind(this, index)} />
+          rearrange={this.rearrange.bind(this, index)} />
       );
 
       controllerUnits.push(
@@ -238,7 +238,7 @@ class AppComponent extends React.Component {
           key={index}
           arrange={this.state.imgsArrangeArr[index]}
           inverse={this.inverse.bind(this, index)}
-          center={this.center.bind(this, index)} />
+          rearrange={this.rearrange.bind(this, index)} />
       );
     });
 
