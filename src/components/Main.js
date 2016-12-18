@@ -94,6 +94,11 @@ class AppComponent extends React.Component {
     let vPosRangeTopY = vPosRange.topY;
     let vPosRangeX = vPosRange.x;
 
+    // 重新布局前，将所有图片翻回正面
+    imgsArrangeArr.map((item, index) => {
+      imgsArrangeArr[index].isInverse = false;
+    });
+
     let imgsArrangeTopArr = [];
     // 取1或2个顶部图片
     let topImgNum = Math.ceil(Math.random() * 2);

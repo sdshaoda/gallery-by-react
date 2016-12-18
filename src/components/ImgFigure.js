@@ -9,8 +9,10 @@ class ImgFigure extends React.Component {
     e.preventDefault();
 
     if (this.props.arrange && this.props.arrange.isCenter) {
+      // 如果点击的是中心图片，则翻转之
       this.props.inverse();
     } else {
+      // 如果不是中心图片，重新布局
       this.props.rearrange();
     }
   }
