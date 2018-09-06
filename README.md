@@ -1,8 +1,14 @@
-## 使用Create React App生成的React应用
+## 使用 React 打造的图片画廊
 
-Update：之前使用 yoman 生成器生成 react-webpack 项目，但是安装依赖经常失败，这次使用 React 的官方工具重做了 gallery 应用
+Update：之前使用 `yoman` 生成器生成 `react-webpack` 项目，但是安装依赖经常失败，这次使用 `React` 的官方工具 `create-react-app` 重做了 `gallery` 应用
 
-原项目被存放在 gallery-yeoman-react-webpack 分支上
+[点我观看](https://sdshaoda.github.io/gallery-by-react/)
+
+![screenshort](./screenshort/0.jpg)
+
+原项目被存放在 [gallery-yeoman-react-webpack](https://github.com/sdshaoda/gallery-by-react/tree/gallery-yeoman-react-webpack) 分支上
+
+<hr />
 
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
 
